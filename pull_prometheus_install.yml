@@ -34,10 +34,8 @@
 
       - name: Creating a file with content
         copy:
-          dest: "/your path"
+          dest: "/etc/systemd/system/prometheus.service"
           content: |
-            line 01
-            line 02
             [Unit]
             Description=Prometheus Server
             Documentation=https://prometheus.io/docs/introduction/overview/
