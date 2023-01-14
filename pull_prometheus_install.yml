@@ -1,0 +1,49 @@
+--- 
+- 
+  hosts: all
+  become: true
+  become_method: sudo
+  become_user: root
+  tasks:
+  
+
+      - name: Download fonts
+        get_url:
+          url: https://github.com/prometheus/prometheus/releases/download/v2.15.2/prometheus-2.15.2.linux-armv7.tar.gz
+          dest: /home/pi
+          mode: '0440'
+
+      - name: Copy demo_opts.py to oled directory from where previous block dumped it
+        copy:
+          src: /home/pi/prometheus-2.15.2.linux-armv7/
+          dest: /home/pi/prometheus
+          owner: pi
+          group: pi
+          mode: 0775
+
+      - name: Set I2C Port
+        blockinfile:
+          dest: "/etc/systemd/system/prometheus.service"
+          block: |
+           [Unit]
+           Description=Prometheus Server
+           Documentation=https://prometheus.io/docs/introduction/overview/
+           After=network-online.target
+           
+           [Service]
+           User=pi
+           Restart=on-failure
+           
+           #Change this line if Prometheus is somewhere different
+           ExecStart=/home/pi/prometheus/prometheus \
+             --config.file=/home/pi/prometheus/prometheus.yml \
+             --storage.tsdb.path=/home/pi/prometheus/data
+           
+           [Install]
+           WantedBy=multi-user.target
+
+
+      - name: Make sure a service unit is running
+        systemd:
+          state: started
+          name: prometheus
