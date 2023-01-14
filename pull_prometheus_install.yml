@@ -20,7 +20,7 @@
           dest: /home/pi
           extra_opts:
             - "--add-file"
-           - "install"
+            - "install"
 
 
       - name: Copy demo_opts.py to oled directory from where previous block dumped it
