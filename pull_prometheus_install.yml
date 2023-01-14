@@ -31,26 +31,53 @@
           group: pi
           mode: 0775
 
-      - name: Set I2C Port
-        blockinfile:
-          dest: "/etc/systemd/system/prometheus.service"
-          block: |
-           [Unit]
-           Description=Prometheus Server
-           Documentation=https://prometheus.io/docs/introduction/overview/
-           After=network-online.target
-           
-           [Service]
-           User=pi
-           Restart=on-failure
-           
-           #Change this line if Prometheus is somewhere different
-           ExecStart=/home/pi/prometheus/prometheus \
+
+      - name: Creating a file with content
+        copy:
+          dest: "/your path"
+          content: |
+            line 01
+            line 02
+            [Unit]
+            Description=Prometheus Server
+            Documentation=https://prometheus.io/docs/introduction/overview/
+            After=network-online.target
+
+            [Service]
+            User=pi
+            Restart=on-failure
+
+            #Change this line if Prometheus is somewhere different
+            ExecStart=/home/pi/prometheus/prometheus \
              --config.file=/home/pi/prometheus/prometheus.yml \
              --storage.tsdb.path=/home/pi/prometheus/data
-           
-           [Install]
-           WantedBy=multi-user.target
+
+            [Install]
+            WantedBy=multi-user.target
+
+ 
+
+
+#      - name: Set I2C Port
+#        blockinfile:
+#          dest: "/etc/systemd/system/prometheus.service"
+#          block: |
+#           [Unit]
+#           Description=Prometheus Server
+#           Documentation=https://prometheus.io/docs/introduction/overview/
+#           After=network-online.target
+#           
+#           [Service]
+#           User=pi
+#           Restart=on-failure
+#           
+#           #Change this line if Prometheus is somewhere different
+#           ExecStart=/home/pi/prometheus/prometheus \
+#             --config.file=/home/pi/prometheus/prometheus.yml \
+#             --storage.tsdb.path=/home/pi/prometheus/data
+#           
+#           [Install]
+#           WantedBy=multi-user.target
 
 
       - name: Make sure a service unit is running
